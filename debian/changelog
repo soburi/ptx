@@ -1,4 +1,4 @@
-pt3dvb-dkms (0.0.1-1) trusty; urgency=low
+pt3dvb-dkms (0.0.1-1ppa1) trusty; urgency=low
 
   * Initial release (Closes: #99999999)
 
