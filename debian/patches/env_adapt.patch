@@ -1,6 +1,6 @@
 --- a/pt3_dvb/Makefile
 +++ b/pt3_dvb/Makefile
-@@ -1,15 +1,22 @@
+@@ -1,15 +1,30 @@
  DEFS := -DCONFIG_DVB_TC90522 -DCONFIG_MEDIA_TUNER_QM1D1C0042 -DCONFIG_MEDIA_TUNER_MXL301RF
  
 -SRCS := $(shell cd $(PWD); find -iname "*.c" -o -iname "*.h")
@@ -22,8 +22,16 @@
 +$(SRCS): prepare
 +.PHONY: prepare
 +prepare:
-+	tar xfJ /usr/src/linux-source-$(KSRCVER).tar.xz --strip-components=1 -C pt3_dvb \
-+		--wildcards 'linux-source-$(KSRCVER)/drivers/media/tuners/*.h' 'linux-source-$(KSRCVER)/drivers/media/dvb-core/*.h'
++	if [ -e /usr/src/linux-source-$(KSRCVER).tar.xz ] ; then \
++		tar xfJ /usr/src/linux-source-$(KSRCVER).tar.xz --strip-components=1 -C pt3_dvb \
++		--wildcards 'linux-source-$(KSRCVER)/drivers/media/tuners/*.h' 'linux-source-$(KSRCVER)/drivers/media/dvb-core/*.h' ; \
++	elif [ -e /usr/src/linux-source-$(KSRCVER).tar.bz2 ] ; then \
++		tar xfj /usr/src/linux-source-$(KSRCVER).tar.bz2 --strip-components=1 -C pt3_dvb \
++		--wildcards 'linux-source-$(KSRCVER)/drivers/media/tuners/*.h' 'linux-source-$(KSRCVER)/drivers/media/dvb-core/*.h' ; \
++	elif [ -e /usr/src/linux-source-$(KSRCVER).tar.gz ] ; then \
++		tar xfz /usr/src/linux-source-$(KSRCVER).tar.gz --strip-components=1 -C pt3_dvb \
++		--wildcards 'linux-source-$(KSRCVER)/drivers/media/tuners/*.h' 'linux-source-$(KSRCVER)/drivers/media/dvb-core/*.h' ; \
++	fi \
 +
  debug:
  	make "EXTRA_CFLAGS += -DDEBUG $(EXTRA_CFLAGS)" -C $(KBUILD) M=`pwd`
