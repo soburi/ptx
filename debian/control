@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: soburi <soburi@gmail.com>
 Build-Depends: debhelper (>= 9.0.0), dkms
 Standards-Version: 3.9.5
-Homepage: http://github.com/soburi/pt3dvb-dkms.git
+Homepage: http://github.com/soburi/ptx.git
 #Vcs-Git: git://git.debian.org/collab-maint/pt3dvb-dkms.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/pt3dvb-dkms.git;a=summary
 
