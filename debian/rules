@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+version := $(shell dpkg-parsechangelog | sed -n 's/^Version: *\([^-]\+\)-.\+/\1/p')
+DIRS := $(shell for FILE in `find pt3_dvb/drivers -type f` ; do dirname $$FILE ; done | uniq )
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+override_dh_install:
+	for D in $(DIRS) ; do \
+		mkdir -p debian/pt3dvb-dkms/usr/src/pt3_dvb-$(version)/$$D ; \
+		dh_install -ppt3dvb-dkms $$D/* usr/src/pt3_dvb-$(version)/$$D ; \
+	done
+	dh_install -ppt3dvb-dkms pt3_dvb/Makefile usr/src/pt3_dvb-$(version)/ ; \
+	dh_dkms -ppt3dvb-dkms
+
+
+%:
+	dh $@ 

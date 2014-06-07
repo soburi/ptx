@@ -1,0 +1,30 @@
+--- a/pt3_dvb/Makefile
++++ b/pt3_dvb/Makefile
+@@ -1,15 +1,22 @@
+ DEFS := -DCONFIG_DVB_TC90522 -DCONFIG_MEDIA_TUNER_QM1D1C0042 -DCONFIG_MEDIA_TUNER_MXL301RF
+ 
+-SRCS := $(shell cd $(PWD); find -iname "*.c" -o -iname "*.h")
+-INCS := $(addprefix -I$(PWD)/, $(sort $(dir $(SRCS))))
+-TARGET := $(shell eval `sed -e "s/\[0\]//" $(PWD)/dkms.conf`; echo $${PACKAGE_NAME}).ko
++SRCS := $(shell cd $(KBUILD_EXTMOD); find -iname "*.c" -o -iname "*.h")
++INCS := $(addprefix -I$(KBUILD_EXTMOD)/, $(sort $(dir $(SRCS))))
++TARGET := pt3_dvb.ko
+ KVER ?= `uname -r`
+ KBUILD := /lib/modules/$(KVER)/build
+-INSTALL_DIR := /lib/modules/$(KVER)/$(shell eval `sed -e "s/\[0\]//" $(PWD)/dkms.conf`; echo $${DEST_MODULE_LOCATION})
+-EXTRA_CFLAGS += -Wformat=2 -Wall -Werror -Idrivers/media/dvb-core -Idrivers/media/dvb-frontends $(INCS) $(DEFS)
++INSTALL_DIR := /lib/modules/$(KVER)/kernel/drivers/media/pci/pt1
++EXTRA_CFLAGS += -Wformat=2 -Wall -Werror -I$(KBUILD_EXTMOD)/pt3_dvb/drivers/media/dvb-core -I$(KBUILD_EXTMOD)/pt3_dvb/drivers/media/dvb-frontends $(INCS) $(DEFS)
++KSRCVER := $(shell uname -r | sed 's/\-.*//')
+ 
+ all: ${TARGET}
+ 
++$(SRCS): prepare
++.PHONY: prepare
++prepare:
++	tar xfJ /usr/src/linux-source-$(KSRCVER).tar.xz --strip-components=1 -C pt3_dvb \
++		--wildcards 'linux-source-$(KSRCVER)/drivers/media/tuners/*.h' 'linux-source-$(KSRCVER)/drivers/media/dvb-core/*.h'
++
+ debug:
+ 	make "EXTRA_CFLAGS += -DDEBUG $(EXTRA_CFLAGS)" -C $(KBUILD) M=`pwd`
+ 
